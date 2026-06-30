@@ -175,7 +175,6 @@
       letter-spacing: 0.5px;
       margin-bottom: 14px;
     }
-    .allergen-icon { margin-right: 4px; }
 
     .card-footer {
       display: flex;
@@ -291,8 +290,9 @@
       gap: 16px;
       z-index: 100;
       box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+      transition: transform 0.3s;
     }
-    .sticky-bar.hidden { transform: translateY(100%); transition: transform 0.3s; }
+    .sticky-bar.hidden { transform: translateY(100%); }
     .sticky-total {
       font-size: 15px;
       font-family: sans-serif;
@@ -491,13 +491,6 @@
       border-radius: var(--radius);
       border-left: 4px solid var(--terracotta);
     }
-    .no-items-msg {
-      font-size: 14px;
-      font-family: sans-serif;
-      color: var(--text-muted);
-      text-align: center;
-      padding: 10px 0 4px;
-    }
 
     @media (max-width: 600px) {
       .cards-grid { grid-template-columns: 1fr; }
@@ -564,7 +557,6 @@
     </div>
   </section>
 
-  <!-- REVIEW BUTTON (visible on mobile / if sticky bar not visible) -->
   <div style="text-align:center;">
     <button class="btn-review" style="padding:16px 48px;font-size:17px;" onclick="openModal()">
       Review my order
@@ -625,9 +617,10 @@
 <script>
   // ─── CONFIGURATION ───────────────────────────────────────────
   // Replace this URL with your deployed Google Apps Script Web App URL
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzZu-WVDFBRWTxieft3bp5C3OgKSIrcXEZ9S8vULAW_kP5ZgjUxJZ9WOM9O-RdbCa49bA/exec';
+  const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
 
   // ─── MENU DATA ───────────────────────────────────────────────
+  // Image paths match the exact filenames you uploaded to the images/ folder
   const menu = {
     starters: [
       {
@@ -636,7 +629,7 @@
         desc: 'Red snapper marinated in leche de tigre with Peruvian ají amarillo, served with sweet potato, Peruvian corn and toasted corn.',
         allergens: 'Fish',
         price: 250,
-        img: 'images/classic-ceviche.jpg'
+        img: 'images/Classic Ceviche.png'
       },
       {
         id: 'huancaina',
@@ -644,7 +637,7 @@
         desc: 'Yellow potatoes with traditional huancaína sauce.',
         allergens: 'Milk',
         price: 150,
-        img: 'images/papa-huancaina.jpg'
+        img: 'images/Papa a la Huancaína.png'
       },
       {
         id: 'duo',
@@ -652,7 +645,7 @@
         desc: 'Classic Ceviche + Papa a la Huancaína. The best of both worlds on one plate.',
         allergens: 'Fish, Milk',
         price: 220,
-        img: 'images/irresistible-duo.jpg'
+        img: 'images/Irresistible Duo.jpg'
       }
     ],
     mains: [
@@ -662,7 +655,7 @@
         desc: 'Creamy rice with zapallo loche, chicha de jora and a whole chicken leg.',
         allergens: 'Gluten (chicha de jora)',
         price: 280,
-        img: 'images/chicken-meloso-rice.jpg'
+        img: 'images/Chicken Meloso Rice.png'
       },
       {
         id: 'causa',
@@ -670,7 +663,7 @@
         desc: 'Yellow potato causa filled with halibut (kveite), served with escabeche made with Peruvian peppers and chicha de jora.',
         allergens: 'Fish, Gluten (chicha de jora)',
         price: 320,
-        img: 'images/causa-ferrenafana.jpg'
+        img: 'images/Premium Causa Ferreñafana.png'
       }
     ],
     desserts: [
@@ -680,7 +673,7 @@
         desc: 'Classic Peruvian caramel cream topped with port wine meringue and a dusting of cinnamon.',
         allergens: 'Milk, Egg',
         price: 100,
-        img: 'images/suspiro-limeno.jpg'
+        img: 'images/Suspiro Limeño.png'
       },
       {
         id: 'rice-pudding',
@@ -688,7 +681,7 @@
         desc: 'Traditional Peruvian arroz con leche — creamy, milky and gently spiced with cinnamon.',
         allergens: 'Milk',
         price: 90,
-        img: 'images/rice-pudding.jpg'
+        img: 'images/Rice Pudding.png'
       },
       {
         id: 'mazamorra',
@@ -696,7 +689,7 @@
         desc: 'Mazamorra morada — a velvety Peruvian pudding made from purple corn, spices and dried fruit.',
         allergens: 'No major allergens',
         price: 110,
-        img: 'images/purple-corn-pudding.jpg'
+        img: 'images/Purple Corn Pudding.png'
       },
       {
         id: 'combinado',
@@ -704,7 +697,7 @@
         desc: 'The classic Peruvian pairing: Rice Pudding + Purple Corn Pudding served side by side.',
         allergens: 'Milk',
         price: 150,
-        img: 'images/combinado.jpg'
+        img: 'images/Combinado.png'
       }
     ],
     drinks: [
@@ -714,7 +707,7 @@
         desc: 'Traditional Peruvian purple corn drink with cinnamon and cloves. Refreshing and non-alcoholic.',
         allergens: 'None',
         price: 100,
-        img: 'images/chicha-morada-glass.jpg'
+        img: 'images/Chicha Morada glass.png'
       },
       {
         id: 'chicha-pitcher',
@@ -722,7 +715,7 @@
         desc: 'A full pitcher of chicha morada — perfect for sharing with your group.',
         allergens: 'None',
         price: 450,
-        img: 'images/chicha-morada-pitcher.jpg'
+        img: 'images/Chicha Morada pitcher.png'
       },
       {
         id: 'lemonade-glass',
@@ -730,7 +723,7 @@
         desc: 'Freshly squeezed Peruvian lime lemonade, lightly sweetened and served over ice.',
         allergens: 'None',
         price: 80,
-        img: 'images/lemonade-glass.jpg'
+        img: 'images/Natural Lemonade glass.png'
       },
       {
         id: 'lemonade-pitcher',
@@ -738,7 +731,7 @@
         desc: 'A full pitcher of freshly squeezed natural lemonade. Ideal for groups.',
         allergens: 'None',
         price: 380,
-        img: 'images/lemonade-pitcher.jpg'
+        img: 'images/Natural Lemonade pitcher.png'
       }
     ]
   };
@@ -819,7 +812,6 @@
     const email = document.getElementById('customer-email').value.trim();
     const total = getTotal();
 
-    // Validate
     let hasError = false;
     document.getElementById('customer-name').classList.remove('error');
     document.getElementById('customer-email').classList.remove('error');
@@ -836,11 +828,9 @@
       return;
     }
 
-    // Build customer summary
     document.getElementById('summary-customer').innerHTML =
       `<span>Name</span><strong>${name}</strong><br><span style="margin-top:6px">Email</span><strong>${email}</strong>`;
 
-    // Build items summary
     const selectedItems = allItems().filter(i => (quantities[i.id] || 0) > 0);
     const itemsHtml = selectedItems.map(item => `
       <div class="summary-item">
@@ -852,7 +842,6 @@
     document.getElementById('summary-items').innerHTML = itemsHtml;
     document.getElementById('summary-total-price').textContent = total.toLocaleString('nb-NO') + ' NOK';
 
-    // Reset modal to normal state
     document.getElementById('modal-content-normal').style.display = '';
     document.getElementById('modal-content-success').style.display = 'none';
     document.getElementById('btn-confirm').disabled = false;
@@ -903,7 +892,6 @@
         body: JSON.stringify(orderData)
       });
 
-      // Show success (no-cors means we can't read response, assume success)
       document.getElementById('success-email').textContent = email;
       document.getElementById('modal-content-normal').style.display = 'none';
       document.getElementById('modal-content-success').style.display = '';
