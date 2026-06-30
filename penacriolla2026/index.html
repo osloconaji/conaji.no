@@ -590,6 +590,30 @@
     .success-screen h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--navy); margin-bottom: 10px; font-weight: 400; }
     .success-screen p { font-size: 14px; font-family: 'Lora', serif; color: var(--text-muted); line-height: 1.7; }
 
+    /* ── TOAST ───────────────────────────────── */
+    .sticky-toast {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--navy);
+      color: #fff;
+      font-family: 'Lora', serif;
+      font-size: 13px;
+      padding: 10px 18px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 150;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+    .sticky-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
     .review-btn-wrap { text-align: center; margin-top: 10px; }
     .btn-review-main {
       background: var(--burgundy);
@@ -701,6 +725,9 @@
     <button class="btn-review-main" onclick="openModal()">Review my order</button>
   </div>
 </main>
+
+<!-- TOAST -->
+<div class="sticky-toast" id="sticky-toast">Please fill in your name and email first ↑</div>
 
 <!-- STICKY BAR -->
 <div class="sticky-bar hidden" id="sticky-bar">
@@ -823,6 +850,15 @@
     document.getElementById('sticky-bar').classList.toggle('hidden', t===0);
   }
 
+  let toastTimer = null;
+  function showToast(msg) {
+    const t = document.getElementById('sticky-toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
   function openModal() {
     const name = document.getElementById('customer-name').value.trim();
     const email = document.getElementById('customer-email').value.trim();
@@ -831,8 +867,12 @@
     let err = false;
     if (!name) { document.getElementById('customer-name').classList.add('error'); err=true; }
     if (!email||!email.includes('@')) { document.getElementById('customer-email').classList.add('error'); err=true; }
-    if (err) { document.getElementById('customer-name').scrollIntoView({behavior:'smooth',block:'center'}); return; }
-    if (getTotal()===0) { alert('Please select at least one item.'); window.scrollTo({top:0,behavior:'smooth'}); return; }
+    if (err) {
+      showToast('Please fill in your name and email first ↑');
+      document.getElementById('customer-name').scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    if (getTotal()===0) { showToast('Please select at least one item ↑'); window.scrollTo({top:0,behavior:'smooth'}); return; }
 
     document.getElementById('summary-customer').innerHTML =
       `<span>Name</span><strong>${name}</strong><br><span style="margin-top:6px">Email</span><strong>${email}</strong>`;
