@@ -4,6 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pre-Order – Peña Criolla | Oslo con Ají</title>
+
+  <!-- Open Graph / Social media preview -->
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content="https://conaji.no/penacriolla2026/" />
+  <meta property="og:site_name"   content="Oslo con Ají" />
+  <meta property="og:title"       content="Peña Criolla – Pre-Order Food &amp; Drinks" />
+  <meta property="og:description" content="Join us for Peña Criolla – Peruvian National Holidays on Sunday 26 July 2026 at Kjøkken &amp; Bar, Møllergata 16, Oslo. Pre-order your food and drinks now!" />
+  <meta property="og:image"       content="https://conaji.no/images/Classic%20Ceviche.png" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content="Peña Criolla – Pre-Order Food &amp; Drinks" />
+  <meta name="twitter:description" content="Join us for Peña Criolla – Peruvian National Holidays on Sunday 26 July 2026 at Kjøkken &amp; Bar, Møllergata 16, Oslo." />
+  <meta name="twitter:image"       content="https://conaji.no/images/Classic%20Ceviche.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=EB+Garamond:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
@@ -359,6 +374,25 @@
     }
     input[type="number"].error { border-color: var(--burgundy); }
 
+    textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-size: 15px;
+      font-family: 'Lora', serif;
+      color: var(--text);
+      background: var(--parchment-light);
+      outline: none;
+      transition: border-color 0.15s;
+      resize: vertical;
+      min-height: 90px;
+    }
+    textarea:focus {
+      border-color: var(--gold);
+      background: var(--white);
+    }
+
     input[type="text"], input[type="email"] {
       width: 100%;
       padding: 11px 14px;
@@ -379,28 +413,40 @@
 
     /* ── NEWSLETTER CHECKBOX ─────────────────── */
     .newsletter-row {
-      margin-top: 18px;
+      margin-top: 20px;
       display: flex;
       align-items: flex-start;
-      gap: 12px;
+      gap: 14px;
+      background: linear-gradient(135deg, #fdf3e3, #f8ebd4);
+      border: 1.5px solid var(--gold);
+      border-radius: 8px;
+      padding: 16px;
+      cursor: pointer;
     }
+    .newsletter-row:hover { background: linear-gradient(135deg, #f8ecd6, #f2e0c0); }
     .newsletter-row input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
+      width: 20px;
+      height: 20px;
+      margin-top: 3px;
       flex-shrink: 0;
       accent-color: var(--burgundy);
       cursor: pointer;
     }
-    .newsletter-row label {
-      font-size: 13px;
+    .newsletter-label-wrap { flex: 1; }
+    .newsletter-label-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+      display: block;
+      margin-bottom: 3px;
+    }
+    .newsletter-label-sub {
+      font-size: 12.5px;
       font-family: 'Lora', serif;
-      font-weight: 400;
-      letter-spacing: 0;
-      text-transform: none;
       color: var(--text-muted);
-      cursor: pointer;
       line-height: 1.5;
+      display: block;
     }
 
     /* ── STICKY BAR ──────────────────────────── */
@@ -737,10 +783,17 @@
       <label for="customer-guests">Number of guests in your party</label>
       <input type="number" id="customer-guests" min="1" max="50" value="1" />
     </div>
-    <div class="newsletter-row">
-      <input type="checkbox" id="newsletter" />
-      <label for="newsletter">Yes, I'd like to receive news and updates from Oslo con Ají about upcoming events and menus.</label>
+    <div style="margin-top:16px">
+      <label for="customer-message">Message or notes (optional)</label>
+      <textarea id="customer-message" placeholder="Allergies, special requests, questions…"></textarea>
     </div>
+    <label class="newsletter-row" for="newsletter">
+      <input type="checkbox" id="newsletter" />
+      <div class="newsletter-label-wrap">
+        <span class="newsletter-label-title">Stay in the loop 🌶️</span>
+        <span class="newsletter-label-sub">Get early access to upcoming Oslo con Ají events, seasonal menus, and exclusive offers — before anyone else.</span>
+      </div>
+    </label>
   </section>
 
   <div class="review-btn-wrap">
@@ -914,8 +967,10 @@
     if (getTotal()===0) { showToast('Please select at least one item ↑'); window.scrollTo({top:0,behavior:'smooth'}); return; }
 
     const guests = parseInt(document.getElementById('customer-guests').value)||1;
-    document.getElementById('summary-customer').innerHTML =
-      `<span>Name</span><strong>${name}</strong><br><span style="margin-top:6px">Email</span><strong>${email}</strong><br><span style="margin-top:6px">Party size</span><strong>${guests} person${guests===1?'':'s'}</strong>`;
+    const message = document.getElementById('customer-message').value.trim();
+    let customerHtml = `<span>Name</span><strong>${name}</strong><br><span style="margin-top:6px">Email</span><strong>${email}</strong><br><span style="margin-top:6px">Party size</span><strong>${guests} person${guests===1?'':'s'}</strong>`;
+    if (message) customerHtml += `<br><span style="margin-top:6px">Message</span><strong style="font-weight:400;font-style:italic">${message}</strong>`;
+    document.getElementById('summary-customer').innerHTML = customerHtml;
 
     const sel = allItems().filter(i=>(quantities[i.id]||0)>0);
     document.getElementById('summary-items').innerHTML = sel.map(i=>`
@@ -940,13 +995,14 @@
     const name=document.getElementById('customer-name').value.trim();
     const email=document.getElementById('customer-email').value.trim();
     const guests=parseInt(document.getElementById('customer-guests').value)||1;
+    const message=document.getElementById('customer-message').value.trim();
     const newsletter=document.getElementById('newsletter').checked;
     const sel=allItems().filter(i=>(quantities[i.id]||0)>0);
     const btn=document.getElementById('btn-confirm');
     btn.disabled=true; btn.textContent='Sending…';
     try {
       await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name,email,guests,newsletter,total:getTotal(),timestamp:new Date().toISOString(),
+        body:JSON.stringify({name,email,guests,message,newsletter,total:getTotal(),timestamp:new Date().toISOString(),
           items:sel.map(i=>({name:i.name,qty:quantities[i.id],price:i.price,subtotal:quantities[i.id]*i.price}))})});
       document.getElementById('success-email').textContent=email;
       document.getElementById('modal-content-normal').style.display='none';
